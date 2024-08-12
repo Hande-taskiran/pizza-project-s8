@@ -15,10 +15,12 @@
     "@testing-library/user-event": "^14.5.2",
     "axios": "^1.6.5",
     "bootstrap": "^5.3.3",
+    "components": "^0.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^5.2.0",
-    "reactstrap": "^9.2.2"
+    "reactstrap": "^9.2.2",
+    "styled": "^1.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
