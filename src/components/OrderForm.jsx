@@ -11,7 +11,7 @@ const Header = styled.header`
 `;
 const Title = styled.h1`
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-family: "Quattrocento", serif;
   font-weight: bold;
 `;
@@ -28,7 +28,7 @@ const PizzaSelections = styled.div`
   gap: 50%;
 `;
 const PizzaTitle = styled.h2`
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   margin-bottom: 10px;
   text-align: left;
 `;
@@ -36,11 +36,28 @@ const PizzaDescription = styled.p`
   color: #5f5f5f;
   margin-bottom: 10px;
   text-align: left;
+  font-size: 0.9rem;
 `;
 const Price = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   margin-bottom: 20px;
   text-align: left;
+  font-weight: bold;
+`;
+const ExtraSelections = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+`;
+const SelectionsTitle = styled.h3`
+  font-size: 1.1rem;
+  text-align: left;
+  margin-top: 1.5rem;
+`;
+const CheckboxDescription = styled.p`
+  color: #5f5f5f;
+  text-align: left;
+  font-size: 0.9rem;
 `;
 export default function Order() {
   const [size, setSize] = useState("");
@@ -69,16 +86,16 @@ export default function Order() {
       </Header>
       <FormSection>
         <PizzaTitle>Position Absolute Acı Pizza</PizzaTitle>
+        <Price>85.50₺</Price>
         <PizzaDescription>
           Frontend Dev olarak hala position:absolute kullanıyorsan bu çok acı
           pizza tam sana göre. Pizza, domates, peynir ve genellikle çeşitli
           malzemelerle kaplanmış ve odun ateşinde pişirilmiştir.
         </PizzaDescription>
-        <Price>85.50₺</Price>
         <Form>
           <PizzaSelections>
             <FormGroup tag="fieldset">
-              <label>Boyut Seç *</label>
+              <SelectionsTitle>Boyut Seç *</SelectionsTitle>
               <FormGroup check>
                 <Input name="radio1" type="radio" /> <Label check>Küçük</Label>
               </FormGroup>
@@ -90,7 +107,7 @@ export default function Order() {
               </FormGroup>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleSelect">Hamur Seç *</Label>
+              <SelectionsTitle for="exampleSelect">Hamur Seç *</SelectionsTitle>
               <Input
                 id="exampleSelect"
                 name="select"
@@ -103,6 +120,86 @@ export default function Order() {
               </Input>
             </FormGroup>
           </PizzaSelections>
+          <SelectionsTitle>Ek Malzemeler</SelectionsTitle>
+          <CheckboxDescription>
+            En az 4, en fazla 10 malzeme seçebilirsiniz. 5₺
+          </CheckboxDescription>
+          <ExtraSelections>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Pepperoni</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Sosis</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Jambon</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Tavuk</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Soğan</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Domates</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Mısır</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Sucuk</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Jalepeno</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Sarımsak</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Biber</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Salam</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Ananas</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Füme Et</Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input type="checkbox" /> <Label check>Cheddar</Label>
+            </FormGroup>
+          </ExtraSelections>
+          <FormGroup>
+            <SelectionsTitle for="exampleText">Ad Soyad</SelectionsTitle>
+            <Input
+              id="exampleText"
+              name="text"
+              type="text"
+              placeholder="Adınızı ve Soyadınızı yazınız"
+            />
+          </FormGroup>
+          <FormGroup>
+            <SelectionsTitle for="exampleText">Sipariş Notu</SelectionsTitle>
+            <Input
+              id="exampleText"
+              name="text"
+              type="textarea"
+              placeholder="Siparişinize eklemek istediğiniz bir not var mı?"
+            />
+          </FormGroup>
+          <FormGroup>
+            <div>
+              <button
+                onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+              >
+                -
+              </button>
+              <span>{quantity}</span>
+              <button onClick={() => setQuantity(quantity + 1)}>+</button>
+            </div>
+          </FormGroup>
         </Form>
       </FormSection>
     </>
