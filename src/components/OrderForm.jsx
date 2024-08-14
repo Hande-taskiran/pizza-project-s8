@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Form, FormGroup, Label, Input, Button } from "reactstrap";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Form, FormGroup, Label, Input, FormFeedback } from "reactstrap";
 import styled from "styled-components";
 
 const Header = styled.header`
@@ -15,6 +16,11 @@ const Title = styled.h1`
   font-family: "Quattrocento", serif;
   font-weight: bold;
 `;
+const Breadcrumb = styled.nav`
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #faf7f2;
+`;
 const FormSection = styled.section`
   width: 30%;
   margin: 0 auto;
@@ -24,7 +30,7 @@ const FormSection = styled.section`
 
 const PizzaSelections = styled.div`
   display: flex;
-  justtify-content: space-between;
+  justify-content: space-between;
   gap: 50%;
 `;
 const PizzaTitle = styled.h2`
@@ -85,61 +91,136 @@ const OrderButton = styled.button`
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
-  margin-top: 20px;
 `;
 const CounterButton = styled.button`
   background-color: #fdc913;
   color: black;
   margin-top: 20px;
 `;
+const OrderBox = styled.div`
+  width: 65%;
+`;
+
+const errorMessages = {
+  extras: "En az 4, en fazla 10 malzeme seçmelisiniz",
+  adSoyad: "Adınızı doğru girmediniz",
+};
 export default function Order() {
-  const [formData, setFormData] = useState("");
+  const [formData, setFormData] = useState({});
   const [extras, setExtras] = useState([]);
   const [quantity, setQuantity] = useState(1);
+  const [isValid, setIsValid] = useState(false);
+  const [error, setError] = useState({
+    extras: false,
+    adSoyad: false,
+  });
 
-  const handleChangeExtras = (event) => {
-    const { value, checked } = event.target;
-    setExtras((items) =>
-      checked ? [...items, value] : items.filter((item) => item !== value)
-    );
+  const handleChange = (event) => {
+    const { value, checked, name, type } = event.target;
+    if (type == "checkbox") {
+      const updatedExtras = checked
+        ? [...extras, value]
+        : extras.filter((item) => item !== value);
+      setExtras(updatedExtras);
+
+      if (updatedExtras.length >= 4 && updatedExtras.length <= 10) {
+        setError({ ...error, extras: false });
+      } else {
+        setError({ ...error, extras: true });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+
+      if (name == "adSoyad") {
+        if (value.trim().length >= 3) {
+          setError({ ...error, adSoyad: false });
+        } else {
+          setError({ ...error, adSoyad: true });
+        }
+      }
+    }
   };
-  const handleChange = (e) => {
-    setFormData(e.target.value);
-  };
+
+  useEffect(() => {
+    if (
+      extras.length >= 4 &&
+      extras.length <= 10 &&
+      formData.adSoyad.trim().length >= 3
+    ) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+  }, [extras, formData]);
 
   const extraPrice = extras.length * 5;
+  const basePrice = 85.5;
   const calculateTotal = () => {
-    const basePrice = 85.5;
     return (basePrice + extraPrice) * quantity;
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!isValid) return;
+
+    axios
+      .post("https://reqres.in/api/pizza", {
+        ...formData,
+        extras,
+        quantity,
+        total: calculateTotal(),
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
     <>
       <Header>
         <Title>Teknolojik Yemekler</Title>
+        <Breadcrumb>
+          Anasayfa {">"} Seçenekler {">"} Sipariş Oluştur
+        </Breadcrumb>
       </Header>
       <FormSection>
         <PizzaTitle>Position Absolute Acı Pizza</PizzaTitle>
-        <Price>85.50₺</Price>
+        <Price>{basePrice}₺</Price>
         <PizzaDescription>
           Frontend Dev olarak hala position:absolute kullanıyorsan bu çok acı
           pizza tam sana göre. Pizza, domates, peynir ve genellikle çeşitli
           malzemelerle kaplanmış ve odun ateşinde pişirilmiştir.
         </PizzaDescription>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <PizzaSelections>
             <FormGroup tag="fieldset">
               <SelectionsTitle>Boyut Seç *</SelectionsTitle>
               <FormGroup check>
-                <Input name="radio1" type="radio" onChange={handleChange} />{" "}
+                <Input
+                  name="radio1"
+                  type="radio"
+                  value="small"
+                  onChange={handleChange}
+                />{" "}
                 <Label check>Küçük</Label>
               </FormGroup>
               <FormGroup check>
-                <Input name="radio1" type="radio" onChange={handleChange} />{" "}
+                <Input
+                  name="radio1"
+                  type="radio"
+                  value="medium"
+                  onChange={handleChange}
+                />{" "}
                 <Label check>Orta</Label>
               </FormGroup>
               <FormGroup check>
-                <Input name="radio1" type="radio" onChange={handleChange} />{" "}
+                <Input
+                  name="radio1"
+                  type="radio"
+                  value="large"
+                  onChange={handleChange}
+                />{" "}
                 <Label check>Büyük</Label>
               </FormGroup>
             </FormGroup>
@@ -152,9 +233,9 @@ export default function Order() {
                 placeholder="Hamur Kalınlığı"
                 onChange={handleChange}
               >
-                <option>İnce Hamur</option>
-                <option>Normal Hamur</option>
-                <option>Kalın Hamur</option>
+                <option value="thin">İnce Hamur</option>
+                <option value="normal">Normal Hamur</option>
+                <option value="thich">Kalın Hamur</option>
               </Input>
             </FormGroup>
           </PizzaSelections>
@@ -164,63 +245,67 @@ export default function Order() {
           </CheckboxDescription>
           <ExtraSelections>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input
+                type="checkbox"
+                value="Pepperoni"
+                onChange={handleChange}
+              />{" "}
               <Label check>Pepperoni</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Sosis" onChange={handleChange} />{" "}
               <Label check>Sosis</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Jambon" onChange={handleChange} />{" "}
               <Label check>Jambon</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Tavuk" onChange={handleChange} />{" "}
               <Label check>Tavuk</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Soğan" onChange={handleChange} />{" "}
               <Label check>Soğan</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Domates" onChange={handleChange} />{" "}
               <Label check>Domates</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Mısır" onChange={handleChange} />{" "}
               <Label check>Mısır</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Sucuk" onChange={handleChange} />{" "}
               <Label check>Sucuk</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Jalepeno" onChange={handleChange} />{" "}
               <Label check>Jalepeno</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Sarımsak" onChange={handleChange} />{" "}
               <Label check>Sarımsak</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Biber" onChange={handleChange} />{" "}
               <Label check>Biber</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Salam" onChange={handleChange} />{" "}
               <Label check>Salam</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Ananas" onChange={handleChange} />{" "}
               <Label check>Ananas</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Füme Et" onChange={handleChange} />{" "}
               <Label check>Füme Et</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Input type="checkbox" value="Cheddar" onChange={handleChange} />{" "}
               <Label check>Cheddar</Label>
             </FormGroup>
           </ExtraSelections>
@@ -228,19 +313,26 @@ export default function Order() {
             <SelectionsTitle for="exampleText">Ad Soyad</SelectionsTitle>
             <Input
               id="exampleText"
-              name="text"
+              name="adSoyad"
               type="text"
               placeholder="Adınızı ve Soyadınızı yazınız"
+              value={formData.adSoyad}
               onChange={handleChange}
             />
+
+            {error.adSoyad && (
+              <FormFeedback>{errorMessages.adSoyad}</FormFeedback>
+            )}
           </FormGroup>
           <FormGroup>
             <SelectionsTitle for="exampleText">Sipariş Notu</SelectionsTitle>
             <Input
               id="exampleText"
-              name="text"
+              name="note"
               type="textarea"
+              rows="3"
               placeholder="Siparişinize eklemek istediğiniz bir not var mı?"
+              value={formData.note}
               onChange={handleChange}
             />
           </FormGroup>
@@ -256,18 +348,20 @@ export default function Order() {
                 +
               </CounterButton>
             </div>
-            <OrderSummary>
-              <SelectionsTitle>Sipariş Toplamı</SelectionsTitle>
-              <SummaryItem>
-                <span>Seçimler:</span>
-                <span>{extraPrice}₺</span>
-              </SummaryItem>
-              <SummaryItem>
-                <span>Toplam:</span>
-                <span>{calculateTotal()}₺</span>
-              </SummaryItem>
-              <OrderButton>SİPARİŞ VER</OrderButton>
-            </OrderSummary>
+            <OrderBox>
+              <OrderSummary>
+                <SelectionsTitle>Sipariş Toplamı</SelectionsTitle>
+                <SummaryItem>
+                  <span>Seçimler:</span>
+                  <span>{extraPrice}₺</span>
+                </SummaryItem>
+                <SummaryItem>
+                  <span>Toplam:</span>
+                  <span>{calculateTotal()}₺</span>
+                </SummaryItem>
+              </OrderSummary>
+              <OrderButton disabled={!isValid}>SİPARİŞ VER</OrderButton>
+            </OrderBox>
           </BottomGroup>
         </Form>
       </FormSection>
