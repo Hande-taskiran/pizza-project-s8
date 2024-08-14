@@ -59,11 +59,42 @@ const CheckboxDescription = styled.p`
   text-align: left;
   font-size: 0.9rem;
 `;
+const OrderSummary = styled.div`
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 4px;
+  border: 1px solid #5f5f5f;
+`;
+const SummaryItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+const BottomGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+`;
+const OrderButton = styled.button`
+  width: 100%;
+  background-color: #fdc913;
+  color: black;
+  padding: 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+`;
+const CounterButton = styled.button`
+  background-color: #fdc913;
+  color: black;
+  margin-top: 20px;
+`;
 export default function Order() {
-  const [size, setSize] = useState("");
-  const [dough, setDough] = useState("");
+  const [formData, setFormData] = useState("");
   const [extras, setExtras] = useState([]);
-  const [note, setNote] = useState("");
   const [quantity, setQuantity] = useState(1);
 
   const handleChangeExtras = (event) => {
@@ -72,10 +103,13 @@ export default function Order() {
       checked ? [...items, value] : items.filter((item) => item !== value)
     );
   };
+  const handleChange = (e) => {
+    setFormData(e.target.value);
+  };
 
+  const extraPrice = extras.length * 5;
   const calculateTotal = () => {
     const basePrice = 85.5;
-    const extraPrice = extras.length * 5;
     return (basePrice + extraPrice) * quantity;
   };
 
@@ -97,13 +131,16 @@ export default function Order() {
             <FormGroup tag="fieldset">
               <SelectionsTitle>Boyut Seç *</SelectionsTitle>
               <FormGroup check>
-                <Input name="radio1" type="radio" /> <Label check>Küçük</Label>
+                <Input name="radio1" type="radio" onChange={handleChange} />{" "}
+                <Label check>Küçük</Label>
               </FormGroup>
               <FormGroup check>
-                <Input name="radio1" type="radio" /> <Label check>Orta</Label>
+                <Input name="radio1" type="radio" onChange={handleChange} />{" "}
+                <Label check>Orta</Label>
               </FormGroup>
               <FormGroup check>
-                <Input name="radio1" type="radio" /> <Label check>Büyük</Label>
+                <Input name="radio1" type="radio" onChange={handleChange} />{" "}
+                <Label check>Büyük</Label>
               </FormGroup>
             </FormGroup>
             <FormGroup>
@@ -113,6 +150,7 @@ export default function Order() {
                 name="select"
                 type="select"
                 placeholder="Hamur Kalınlığı"
+                onChange={handleChange}
               >
                 <option>İnce Hamur</option>
                 <option>Normal Hamur</option>
@@ -126,49 +164,64 @@ export default function Order() {
           </CheckboxDescription>
           <ExtraSelections>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Pepperoni</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Pepperoni</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Sosis</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Sosis</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Jambon</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Jambon</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Tavuk</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Tavuk</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Soğan</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Soğan</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Domates</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Domates</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Mısır</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Mısır</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Sucuk</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Sucuk</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Jalepeno</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Jalepeno</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Sarımsak</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Sarımsak</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Biber</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Biber</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Salam</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Salam</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Ananas</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Ananas</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Füme Et</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Füme Et</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" /> <Label check>Cheddar</Label>
+              <Input type="checkbox" onChange={handleChangeExtras} />{" "}
+              <Label check>Cheddar</Label>
             </FormGroup>
           </ExtraSelections>
           <FormGroup>
@@ -178,6 +231,7 @@ export default function Order() {
               name="text"
               type="text"
               placeholder="Adınızı ve Soyadınızı yazınız"
+              onChange={handleChange}
             />
           </FormGroup>
           <FormGroup>
@@ -187,19 +241,34 @@ export default function Order() {
               name="text"
               type="textarea"
               placeholder="Siparişinize eklemek istediğiniz bir not var mı?"
+              onChange={handleChange}
             />
           </FormGroup>
-          <FormGroup>
+          <BottomGroup>
             <div>
-              <button
+              <CounterButton
                 onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
               >
                 -
-              </button>
+              </CounterButton>
               <span>{quantity}</span>
-              <button onClick={() => setQuantity(quantity + 1)}>+</button>
+              <CounterButton onClick={() => setQuantity(quantity + 1)}>
+                +
+              </CounterButton>
             </div>
-          </FormGroup>
+            <OrderSummary>
+              <SelectionsTitle>Sipariş Toplamı</SelectionsTitle>
+              <SummaryItem>
+                <span>Seçimler:</span>
+                <span>{extraPrice}₺</span>
+              </SummaryItem>
+              <SummaryItem>
+                <span>Toplam:</span>
+                <span>{calculateTotal()}₺</span>
+              </SummaryItem>
+              <OrderButton>SİPARİŞ VER</OrderButton>
+            </OrderSummary>
+          </BottomGroup>
         </Form>
       </FormSection>
     </>
