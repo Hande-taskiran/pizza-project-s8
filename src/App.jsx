@@ -1,13 +1,25 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import workintech from "/workintech.svg";
 import "./App.css";
-import Order from "./components/OrderForm";
+import Order from "./components/Order";
+import Home from "./components/Home";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Success from "./components/Success";
 
 function App() {
   return (
     <>
-      <Order />
+      <Router>
+        <Switch>
+          <Route path="/" exact>
+            <Home />
+          </Route>
+          <Route path="/order">
+            <Order />
+          </Route>
+          <Route path="/order/success">
+            <Success />
+          </Route>
+        </Switch>
+      </Router>
     </>
   );
 }

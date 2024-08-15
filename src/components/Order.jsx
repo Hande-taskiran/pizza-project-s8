@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { Form, FormGroup, Label, Input, FormFeedback } from "reactstrap";
 import styled from "styled-components";
 
@@ -115,6 +116,8 @@ export default function Order() {
     adSoyad: false,
   });
 
+  const history = useHistory();
+
   const handleChange = (event) => {
     const { value, checked, name, type } = event.target;
     if (type == "checkbox") {
@@ -151,7 +154,7 @@ export default function Order() {
     } else {
       setIsValid(false);
     }
-  }, [extras, formData]);
+  }, [extras, formData.adSoyad]);
 
   const extraPrice = extras.length * 5;
   const basePrice = 85.5;
@@ -159,22 +162,23 @@ export default function Order() {
     return (basePrice + extraPrice) * quantity;
   };
 
-  const handleSubmit = (event) => {
+  function handleSubmit(event) {
     event.preventDefault();
     if (!isValid) return;
 
     axios
       .post("https://reqres.in/api/pizza", {
         ...formData,
-        extras,
-        quantity,
+        ...extras,
+        ...quantity,
         total: calculateTotal(),
       })
       .then((res) => {
         console.log(res.data);
+        history.push("/order/success");
       })
       .catch((err) => console.log(err));
-  };
+  }
 
   return (
     <>
@@ -249,65 +253,139 @@ export default function Order() {
                 type="checkbox"
                 value="Pepperoni"
                 onChange={handleChange}
+                invalid={error.extras}
               />{" "}
               <Label check>Pepperoni</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Sosis" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Sosis"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Sosis</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Jambon" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Jambon"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Jambon</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Tavuk" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Tavuk"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Tavuk</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Soğan" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Soğan"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Soğan</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Domates" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Domates"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Domates</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Mısır" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Mısır"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Mısır</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Sucuk" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Sucuk"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Sucuk</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Jalepeno" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Jalepeno"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Jalepeno</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Sarımsak" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Sarımsak"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Sarımsak</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Biber" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Biber"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Biber</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Salam" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Salam"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Salam</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Ananas" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Ananas"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Ananas</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Füme Et" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Füme Et"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Füme Et</Label>
             </FormGroup>
             <FormGroup check>
-              <Input type="checkbox" value="Cheddar" onChange={handleChange} />{" "}
+              <Input
+                type="checkbox"
+                value="Cheddar"
+                onChange={handleChange}
+                invalid={error.extras}
+              />{" "}
               <Label check>Cheddar</Label>
             </FormGroup>
+            {error.extras && (
+              <FormFeedback>{errorMessages.extras}</FormFeedback>
+            )}
           </ExtraSelections>
           <FormGroup>
             <SelectionsTitle for="exampleText">Ad Soyad</SelectionsTitle>
@@ -318,6 +396,7 @@ export default function Order() {
               placeholder="Adınızı ve Soyadınızı yazınız"
               value={formData.adSoyad}
               onChange={handleChange}
+              invalid={error.adSoyad}
             />
 
             {error.adSoyad && (
@@ -360,7 +439,9 @@ export default function Order() {
                   <span>{calculateTotal()}₺</span>
                 </SummaryItem>
               </OrderSummary>
-              <OrderButton disabled={!isValid}>SİPARİŞ VER</OrderButton>
+              <OrderButton type="submit" disabled={!isValid}>
+                SİPARİŞ VER
+              </OrderButton>
             </OrderBox>
           </BottomGroup>
         </Form>
