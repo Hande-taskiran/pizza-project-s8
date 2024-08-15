@@ -102,7 +102,7 @@ const OrderBox = styled.div`
   width: 65%;
 `;
 
-const errorMessages = {
+export const errorMessages = {
   extras: "En az 4, en fazla 10 malzeme seçmelisiniz",
   adSoyad: "Adınızı doğru girmediniz",
 };
@@ -254,6 +254,7 @@ export default function Order() {
                 value="Pepperoni"
                 onChange={handleChange}
                 invalid={error.extras}
+                data-cy="pepperoni-input"
               />{" "}
               <Label check>Pepperoni</Label>
             </FormGroup>
@@ -263,6 +264,7 @@ export default function Order() {
                 value="Sosis"
                 onChange={handleChange}
                 invalid={error.extras}
+                data-cy="sosis-input"
               />{" "}
               <Label check>Sosis</Label>
             </FormGroup>
@@ -272,6 +274,7 @@ export default function Order() {
                 value="Jambon"
                 onChange={handleChange}
                 invalid={error.extras}
+                data-cy="jambon-input"
               />{" "}
               <Label check>Jambon</Label>
             </FormGroup>
@@ -281,6 +284,7 @@ export default function Order() {
                 value="Tavuk"
                 onChange={handleChange}
                 invalid={error.extras}
+                data-cy="tavuk-input"
               />{" "}
               <Label check>Tavuk</Label>
             </FormGroup>
@@ -290,6 +294,7 @@ export default function Order() {
                 value="Soğan"
                 onChange={handleChange}
                 invalid={error.extras}
+                data-cy="soğan-input"
               />{" "}
               <Label check>Soğan</Label>
             </FormGroup>
@@ -299,6 +304,7 @@ export default function Order() {
                 value="Domates"
                 onChange={handleChange}
                 invalid={error.extras}
+                data-cy="domates-input"
               />{" "}
               <Label check>Domates</Label>
             </FormGroup>
@@ -308,6 +314,7 @@ export default function Order() {
                 value="Mısır"
                 onChange={handleChange}
                 invalid={error.extras}
+                data-cy="mısır-input"
               />{" "}
               <Label check>Mısır</Label>
             </FormGroup>
@@ -317,6 +324,7 @@ export default function Order() {
                 value="Sucuk"
                 onChange={handleChange}
                 invalid={error.extras}
+                data-cy="sucuk-input"
               />{" "}
               <Label check>Sucuk</Label>
             </FormGroup>
@@ -326,6 +334,7 @@ export default function Order() {
                 value="Jalepeno"
                 onChange={handleChange}
                 invalid={error.extras}
+                data-cy="jalepeno-input"
               />{" "}
               <Label check>Jalepeno</Label>
             </FormGroup>
@@ -335,6 +344,7 @@ export default function Order() {
                 value="Sarımsak"
                 onChange={handleChange}
                 invalid={error.extras}
+                data-cy="sarımsak-input"
               />{" "}
               <Label check>Sarımsak</Label>
             </FormGroup>
@@ -380,6 +390,7 @@ export default function Order() {
                 value="Cheddar"
                 onChange={handleChange}
                 invalid={error.extras}
+                data-cy="cheddar-input"
               />{" "}
               <Label check>Cheddar</Label>
             </FormGroup>
@@ -397,6 +408,7 @@ export default function Order() {
               value={formData.adSoyad}
               onChange={handleChange}
               invalid={error.adSoyad}
+              data-cy="ad-input"
             />
 
             {error.adSoyad && (
@@ -439,7 +451,7 @@ export default function Order() {
                   <span>{calculateTotal()}₺</span>
                 </SummaryItem>
               </OrderSummary>
-              <OrderButton type="submit" disabled={!isValid}>
+              <OrderButton data-cy="submit" type="submit" disabled={!isValid}>
                 SİPARİŞ VER
               </OrderButton>
             </OrderBox>
