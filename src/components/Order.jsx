@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Form, FormGroup, Label, Input, FormFeedback } from "reactstrap";
 import styled from "styled-components";
 
@@ -45,13 +45,13 @@ const PizzaDescription = styled.p`
   text-align: left;
   font-size: 0.9rem;
 `;
-const Price = styled.div`
+const Price = styled.p`
   font-size: 1.4rem;
   margin-bottom: 20px;
   text-align: left;
   font-weight: bold;
 `;
-const ExtraSelections = styled.div`
+const ExtraSelections = styled.section`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.4rem;
@@ -66,13 +66,13 @@ const CheckboxDescription = styled.p`
   text-align: left;
   font-size: 0.9rem;
 `;
-const OrderSummary = styled.div`
+const OrderSummary = styled.section`
   margin-top: 20px;
   padding: 20px;
   border-radius: 4px;
   border: 1px solid #5f5f5f;
 `;
-const SummaryItem = styled.div`
+const SummaryItem = styled.section`
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
