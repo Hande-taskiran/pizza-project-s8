@@ -107,7 +107,7 @@ export const errorMessages = {
   adSoyad: "Adınızı doğru girmediniz",
 };
 export default function Order() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ adSoyad: "", note: "" });
   const [extras, setExtras] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [isValid, setIsValid] = useState(false);
@@ -125,6 +125,7 @@ export default function Order() {
         ? [...extras, value]
         : extras.filter((item) => item !== value);
       setExtras(updatedExtras);
+      console.log("Updated Extras:", updatedExtras);
 
       if (updatedExtras.length >= 4 && updatedExtras.length <= 10) {
         setError({ ...error, extras: false });
@@ -132,7 +133,13 @@ export default function Order() {
         setError({ ...error, extras: true });
       }
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData({ ...formData, extras, quantity, [name]: value });
+      console.log("Form Data:", {
+        ...formData,
+        ...extras,
+        ...quantity,
+        [name]: value,
+      });
 
       if (name == "adSoyad") {
         if (value.trim().length >= 3) {
@@ -164,20 +171,26 @@ export default function Order() {
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    //console.log("isValid:", isValid);
     if (!isValid) return;
 
+    //console.log("history", history);
     axios
       .post("https://reqres.in/api/pizza", {
         ...formData,
-        ...extras,
-        ...quantity,
+        extras,
+        quantity,
         total: calculateTotal(),
       })
       .then((res) => {
-        console.log(res.data);
+        console.log("Axios Response:", res.data);
+        console.log("Form submitted successfully!");
         history.push("/order/success");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log("Axios Error:", err);
+      });
   }
 
   return (
@@ -204,7 +217,7 @@ export default function Order() {
                 <Input
                   name="radio1"
                   type="radio"
-                  value="small"
+                  value="küçük"
                   onChange={handleChange}
                 />{" "}
                 <Label check>Küçük</Label>
@@ -213,7 +226,7 @@ export default function Order() {
                 <Input
                   name="radio1"
                   type="radio"
-                  value="medium"
+                  value="orta"
                   onChange={handleChange}
                 />{" "}
                 <Label check>Orta</Label>
@@ -222,7 +235,7 @@ export default function Order() {
                 <Input
                   name="radio1"
                   type="radio"
-                  value="large"
+                  value="büyük"
                   onChange={handleChange}
                 />{" "}
                 <Label check>Büyük</Label>
@@ -237,9 +250,9 @@ export default function Order() {
                 placeholder="Hamur Kalınlığı"
                 onChange={handleChange}
               >
-                <option value="thin">İnce Hamur</option>
+                <option value="ince">İnce Hamur</option>
                 <option value="normal">Normal Hamur</option>
-                <option value="thich">Kalın Hamur</option>
+                <option value="kalın">Kalın Hamur</option>
               </Input>
             </FormGroup>
           </PizzaSelections>
