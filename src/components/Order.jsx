@@ -107,7 +107,13 @@ export const errorMessages = {
   adSoyad: "Adınızı doğru girmediniz",
 };
 export default function Order() {
-  const [formData, setFormData] = useState({ adSoyad: "", note: "" });
+  const [formData, setFormData] = useState({
+    adSoyad: "",
+    note: "",
+    boyut: "",
+    hamur: "",
+    total: "",
+  });
   const [extras, setExtras] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [isValid, setIsValid] = useState(false);
@@ -125,7 +131,7 @@ export default function Order() {
         ? [...extras, value]
         : extras.filter((item) => item !== value);
       setExtras(updatedExtras);
-      console.log("Updated Extras:", updatedExtras);
+      //console.log("Updated Extras:", updatedExtras);
 
       if (updatedExtras.length >= 4 && updatedExtras.length <= 10) {
         setError({ ...error, extras: false });
@@ -134,12 +140,12 @@ export default function Order() {
       }
     } else {
       setFormData({ ...formData, extras, quantity, [name]: value });
-      console.log("Form Data:", {
+      /*console.log("Form Data:", {
         ...formData,
-        ...extras,
-        ...quantity,
+        extras,
+        quantity,
         [name]: value,
-      });
+      });*/
 
       if (name == "adSoyad") {
         if (value.trim().length >= 3) {
@@ -161,7 +167,7 @@ export default function Order() {
     } else {
       setIsValid(false);
     }
-  }, [extras, formData.adSoyad]);
+  }, [extras, formData]);
 
   const extraPrice = extras.length * 5;
   const basePrice = 85.5;
@@ -185,8 +191,8 @@ export default function Order() {
       })
       .then((res) => {
         console.log("Axios Response:", res.data);
-        console.log("Form submitted successfully!");
         history.push("/order/success");
+        //console.log("history", history);
       })
       .catch((err) => {
         console.log("Axios Error:", err);
@@ -215,7 +221,7 @@ export default function Order() {
               <SelectionsTitle>Boyut Seç *</SelectionsTitle>
               <FormGroup check>
                 <Input
-                  name="radio1"
+                  name="boyut"
                   type="radio"
                   value="küçük"
                   onChange={handleChange}
@@ -224,7 +230,7 @@ export default function Order() {
               </FormGroup>
               <FormGroup check>
                 <Input
-                  name="radio1"
+                  name="boyut"
                   type="radio"
                   value="orta"
                   onChange={handleChange}
@@ -233,7 +239,7 @@ export default function Order() {
               </FormGroup>
               <FormGroup check>
                 <Input
-                  name="radio1"
+                  name="boyut"
                   type="radio"
                   value="büyük"
                   onChange={handleChange}
@@ -245,7 +251,7 @@ export default function Order() {
               <SelectionsTitle for="exampleSelect">Hamur Seç *</SelectionsTitle>
               <Input
                 id="exampleSelect"
-                name="select"
+                name="hamur"
                 type="select"
                 placeholder="Hamur Kalınlığı"
                 onChange={handleChange}
@@ -444,11 +450,15 @@ export default function Order() {
             <div>
               <CounterButton
                 onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+                type="button"
               >
                 -
               </CounterButton>
               <span>{quantity}</span>
-              <CounterButton onClick={() => setQuantity(quantity + 1)}>
+              <CounterButton
+                onClick={() => setQuantity(quantity + 1)}
+                type="button"
+              >
                 +
               </CounterButton>
             </div>
